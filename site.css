@@ -1063,6 +1063,10 @@ h2 {
     display: none;
   }
 
+  .home-shell .site-header .header-phone {
+    display: none;
+  }
+
   .home-shell .home-copy .eyebrow {
     display: none;
   }
@@ -1070,6 +1074,7 @@ h2 {
   .home-shell .contacts-band {
     background: var(--paper);
     color: var(--ink);
+    gap: 10px;
   }
 
   .home-shell .contacts-band .glow-layer {
@@ -1080,12 +1085,21 @@ h2 {
     display: none;
   }
 
+  .home-shell .contacts-band-info {
+    text-align: center;
+  }
+
   .home-shell .contacts-band h2 {
     color: var(--ink);
+    font-size: 22px;
+    margin-bottom: 8px;
   }
 
   .home-shell .contacts-band p {
     color: var(--muted);
+    font-size: 13px;
+    max-width: none;
+    margin-bottom: 0;
   }
 
   .home-shell .contact-phone {
