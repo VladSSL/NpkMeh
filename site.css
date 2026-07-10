@@ -227,8 +227,18 @@ svg {
   transition: color var(--dur-fast) var(--ease);
 }
 
+.header-phone svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
 .header-phone:hover {
   color: var(--page-accent);
+}
+
+.header-phone:hover svg {
+  animation: icon-ring 500ms ease;
 }
 
 .document-header {
@@ -709,9 +719,19 @@ h2 {
   transition: border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
 }
 
+.contact-phone svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 .contact-phone:hover {
   color: var(--page-accent);
   border-color: currentColor;
+}
+
+.contact-phone:hover svg {
+  animation: icon-ring 500ms ease;
 }
 
 .contacts-band .button.primary {
