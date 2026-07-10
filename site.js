@@ -153,7 +153,6 @@ function renderDocument() {
     </section>
 
     <section class="contacts-band document-contact" id="contacts">
-      <div class="glow-layer" aria-hidden="true"></div>
       <div class="contacts-band-info">
         <p class="eyebrow">Заявка</p>
         <h2>Нужна консультация?</h2>
@@ -255,23 +254,6 @@ function initBackToTop() {
   });
 }
 
-function initGlowLayer(selector) {
-  if (prefersReducedMotion()) return;
-
-  document.querySelectorAll(selector).forEach((section) => {
-    const glow = section.querySelector(".glow-layer");
-    if (!glow) return;
-
-    section.addEventListener("mousemove", (event) => {
-      const rect = section.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      glow.style.setProperty("--gx", `${x}%`);
-      glow.style.setProperty("--gy", `${y}%`);
-    });
-  });
-}
-
 let toastTimer = null;
 
 function showToast(message) {
@@ -347,7 +329,6 @@ function initDocumentViewer(doc) {
   initReadingProgress();
   initPageCounter(doc);
   initLightbox(doc);
-  initGlowLayer(".contacts-band");
   initCopyPhone();
 }
 
@@ -529,7 +510,6 @@ function initHomePage() {
   });
 
   initBackToTop();
-  initGlowLayer(".contacts-band");
   initCopyPhone();
 }
 
