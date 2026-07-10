@@ -1041,8 +1041,8 @@ button {
 }
 
 .catalog-card.revealed {
-  animation: card-glow-pulse 820ms ease-in-out 2;
-  animation-delay: calc(2 * var(--dur-slow) + (var(--glow-order, 0) * 1640ms));
+  animation: card-glow-pulse 820ms ease-in-out 1;
+  animation-delay: calc(2 * var(--dur-slow) + (var(--glow-order, 0) * 820ms));
 }
 
 /* ---------------------------------- Responsive -------------------------------- */
