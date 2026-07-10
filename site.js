@@ -40,6 +40,7 @@ const ICONS = {
   chevronRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>`,
   chevronUp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>`,
   close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`,
   zoom: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/><path d="M11 8.5v5"/><path d="M8.5 11h5"/></svg>`,
 };
 
@@ -76,7 +77,7 @@ function actionBarHtml(doc, extraClass = "", label = "Контакты и PDF") 
   return `
     <div class="${className}" aria-label="${label}">
       <a class="header-action header-action-phone" href="${CONTACT.href}">${ICONS.phone}<span>${CONTACT.label}</span></a>
-      <a class="header-action header-action-primary" href="${CONTACT.href}">Оставить заявку</a>
+      <a class="header-action header-action-primary" href="${CONTACT.href}" data-request-modal>Оставить заявку</a>
       <a class="header-action header-action-download" href="${doc.pdfHref}" download="${doc.downloadFileName}">${ICONS.download}<span>Скачать PDF</span></a>
     </div>
   `;
@@ -159,7 +160,7 @@ function renderDocument() {
       </div>
       <div class="contact-actions">
         <a class="contact-phone" href="${CONTACT.href}">${ICONS.phone}${CONTACT.label}</a>
-        <a class="button primary" href="${CONTACT.href}">Оставить заявку</a>
+        <a class="button primary" href="${CONTACT.href}" data-request-modal>Оставить заявку</a>
       </div>
     </section>
 
@@ -294,8 +295,171 @@ function copyText(text) {
   });
 }
 
+function buildRequestModal() {
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="request-modal" id="request-modal" role="dialog" aria-modal="true" aria-labelledby="request-modal-title">
+      <div class="request-modal-backdrop" data-request-close></div>
+      <div class="request-modal-card">
+        <button class="request-modal-close" type="button" data-request-close aria-label="Закрыть">${ICONS.close}</button>
+
+        <div data-request-form-wrap>
+          <p class="eyebrow">Заявка</p>
+          <h2 id="request-modal-title">Оставить заявку</h2>
+          <p class="request-modal-sub">Получите предложение по каталогу в течение рабочего дня.</p>
+
+          <form class="request-form" novalidate>
+            <label class="field">
+              <span>Как вас зовут</span>
+              <input type="text" name="name" autocomplete="name" />
+              <span class="field-error" data-error-for="name">Введите имя</span>
+            </label>
+
+            <label class="field">
+              <span>Телефон</span>
+              <input type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" />
+              <span class="field-error" data-error-for="phone">Введите телефон полностью</span>
+            </label>
+
+            <label class="field">
+              <span>Email (необязательно)</span>
+              <input type="email" name="email" autocomplete="email" placeholder="you@company.ru" />
+              <span class="field-error" data-error-for="email">Проверьте формат email</span>
+            </label>
+
+            <button class="button primary request-submit" type="submit">Отправить заявку</button>
+            <p class="request-consent">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных</p>
+          </form>
+        </div>
+
+        <div class="request-success" data-request-success>
+          <div class="request-success-icon">${ICONS.check}</div>
+          <h2>Готово к отправке</h2>
+          <p class="request-modal-sub">Сейчас откроется письмо в вашей почтовой программе — останется нажать «Отправить».</p>
+          <button class="button secondary" type="button" data-request-close>Закрыть</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap.firstElementChild);
+}
+
+function initRequestModal() {
+  const triggers = document.querySelectorAll("[data-request-modal]");
+  if (!triggers.length) return;
+
+  if (!document.getElementById("request-modal")) buildRequestModal();
+
+  const modal = document.getElementById("request-modal");
+  const formWrap = modal.querySelector("[data-request-form-wrap]");
+  const successPanel = modal.querySelector("[data-request-success]");
+  const form = modal.querySelector(".request-form");
+  const phoneInput = form.querySelector('[name="phone"]');
+  let lastFocused = null;
+
+  const clearErrors = () => {
+    modal.querySelectorAll(".field-error").forEach((el) => el.classList.remove("is-visible"));
+    modal.querySelectorAll("input").forEach((el) => el.classList.remove("has-error"));
+  };
+
+  const showError = (name) => {
+    const input = form.querySelector(`[name="${name}"]`);
+    const err = modal.querySelector(`[data-error-for="${name}"]`);
+    if (input) input.classList.add("has-error");
+    if (err) err.classList.add("is-visible");
+  };
+
+  const open = () => {
+    lastFocused = document.activeElement;
+    formWrap.style.display = "";
+    successPanel.classList.remove("is-visible");
+    form.reset();
+    clearErrors();
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    window.setTimeout(() => form.querySelector('[name="name"]').focus(), 50);
+  };
+
+  const close = () => {
+    modal.classList.remove("is-open");
+    document.body.style.overflow = "";
+    if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      open();
+    });
+  });
+
+  modal.querySelectorAll("[data-request-close]").forEach((el) => {
+    el.addEventListener("click", close);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("is-open")) close();
+  });
+
+  phoneInput.addEventListener("input", () => {
+    let digits = phoneInput.value.replace(/\D/g, "");
+    if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+    if (!digits.startsWith("7")) digits = `7${digits}`;
+    digits = digits.slice(0, 11);
+    const rest = digits.slice(1);
+
+    let out = "+7";
+    if (rest.length) out += ` (${rest.slice(0, 3)}`;
+    if (rest.length >= 3) out += ")";
+    if (rest.length > 3) out += ` ${rest.slice(3, 6)}`;
+    if (rest.length > 6) out += `-${rest.slice(6, 8)}`;
+    if (rest.length > 8) out += `-${rest.slice(8, 10)}`;
+    phoneInput.value = out;
+  });
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    clearErrors();
+
+    const name = form.name.value.trim();
+    const phoneDigits = form.phone.value.replace(/\D/g, "");
+    const email = form.email.value.trim();
+
+    let valid = true;
+    if (!name) {
+      showError("name");
+      valid = false;
+    }
+    if (phoneDigits.length !== 11) {
+      showError("phone");
+      valid = false;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError("email");
+      valid = false;
+    }
+    if (!valid) return;
+
+    const subject = encodeURIComponent("Заявка с сайта МЕХАНИК.РФ");
+    const bodyLines = [
+      `Имя: ${name}`,
+      `Телефон: ${form.phone.value}`,
+      email ? `Email: ${email}` : null,
+      `Страница: ${document.title}`,
+    ].filter(Boolean);
+    const mailto = `mailto:info@maspel.ru?subject=${subject}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+
+    formWrap.style.display = "none";
+    successPanel.classList.add("is-visible");
+
+    window.setTimeout(() => {
+      window.location.href = mailto;
+    }, 250);
+  });
+}
+
 function initCopyPhone() {
-  document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+  document.querySelectorAll('a[href^="tel:"]:not([data-request-modal])').forEach((link) => {
     link.addEventListener("click", () => {
       const phone = link.getAttribute("href").replace("tel:", "");
       copyText(phone)
@@ -329,6 +493,7 @@ function initDocumentViewer(doc) {
   initPageCounter(doc);
   initLightbox(doc);
   initCopyPhone();
+  initRequestModal();
 }
 
 function initReadingProgress() {
@@ -510,6 +675,7 @@ function initHomePage() {
 
   initBackToTop();
   initCopyPhone();
+  initRequestModal();
 }
 
 if (document.querySelector("#document-app")) {

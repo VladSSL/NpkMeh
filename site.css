@@ -1056,6 +1056,180 @@ h2 {
   font-variant-numeric: tabular-nums;
 }
 
+/* ------------------------------ Форма заявки (модалка) ------------------------ */
+
+.request-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease), visibility var(--dur-base) var(--ease);
+}
+
+.request-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.request-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 24, 28, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.request-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(28px, 4vw, 40px);
+  transform: scale(0.96) translateY(10px);
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.request-modal.is-open .request-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.request-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.request-modal-close:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.request-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.request-modal-sub {
+  margin-bottom: 22px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.request-form {
+  display: grid;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field span:first-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.field input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.field input::placeholder {
+  color: var(--muted-2);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--page-accent);
+  box-shadow: 0 0 0 3px var(--page-accent-soft);
+}
+
+.field input.has-error {
+  border-color: #c0392b;
+}
+
+.field-error {
+  display: none;
+  font-size: 12.5px;
+  color: #c0392b;
+}
+
+.field-error.is-visible {
+  display: block;
+}
+
+.request-submit {
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.request-consent {
+  margin-top: 12px;
+  color: var(--muted-2);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.request-success {
+  display: none;
+  padding: 8px 0 2px;
+  text-align: center;
+}
+
+.request-success.is-visible {
+  display: block;
+}
+
+.request-success-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  place-items: center;
+  border-radius: var(--r-pill);
+  background: var(--page-accent-soft);
+  color: var(--page-accent);
+}
+
+.request-success-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.request-success .button {
+  margin-top: 20px;
+}
+
 /* ------------------------------ Scroll reveal ------------------------------- */
 
 .reveal {
