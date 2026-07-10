@@ -214,6 +214,31 @@ svg {
   transform: scaleX(1);
 }
 
+.header-phone {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.header-phone svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.header-phone:hover {
+  color: var(--page-accent);
+}
+
+.header-phone:hover svg {
+  animation: icon-ring 500ms ease;
+}
+
 .document-header {
   grid-template-columns: minmax(230px, 320px) minmax(180px, 1fr) minmax(430px, 610px);
 }
@@ -1326,6 +1351,10 @@ button {
     overflow-x: auto;
   }
 
+  .header-phone {
+    justify-content: flex-start;
+  }
+
   .home-choice,
   .document-hero,
   .contacts-band {
@@ -1410,7 +1439,7 @@ button {
     display: none;
   }
 
-  .home-shell .site-header .header-action-phone {
+  .home-shell .site-header .header-phone {
     display: none;
   }
 
