@@ -1102,6 +1102,10 @@ h2 {
     margin-bottom: 0;
   }
 
+  .home-shell .contacts-band .button.primary {
+    display: none;
+  }
+
   .home-shell .contact-phone {
     color: var(--ink);
     border-bottom-color: var(--border-strong);
@@ -1109,17 +1113,6 @@ h2 {
 
   .home-shell .contact-phone:hover {
     color: var(--page-accent);
-  }
-
-  .home-shell .contacts-band .button.primary {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: #fff;
-  }
-
-  .home-shell .contacts-band .button.primary:hover {
-    border-color: var(--page-accent);
-    background: var(--page-accent);
   }
 }
 
