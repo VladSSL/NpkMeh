@@ -985,15 +985,15 @@ button {
   user-select: none;
 }
 
+.button:active,
+.header-action:active {
+  transform: scale(0.96);
+  transition-duration: 90ms;
+}
+
 @media (hover: none) {
   .catalog-card:active {
     transform: scale(0.98);
-    transition-duration: 90ms;
-  }
-
-  .button:active,
-  .header-action:active {
-    transform: scale(0.96);
     transition-duration: 90ms;
   }
 
