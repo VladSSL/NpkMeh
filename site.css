@@ -1130,7 +1130,14 @@ button {
     display: none;
   }
 
+  .home-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
   .home-shell .contacts-band {
+    margin-top: auto;
     background: var(--paper);
     color: var(--ink);
     gap: 10px;
