@@ -519,7 +519,7 @@ function initHomePage() {
   initHeaderShadow();
 
   initScrollReveal(".home-copy", 0);
-  initScrollReveal(".catalog-card", 90);
+  initScrollReveal(".catalog-card", 520);
   initScrollReveal(".contacts-band", 0);
 
   // Свечение карточек — строго по очереди: карточка 2 начинает
