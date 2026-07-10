@@ -156,17 +156,17 @@ svg {
   transform: rotate(-8deg);
 }
 
-.brand-mark-img {
-  width: auto;
-  height: 34px;
+.brand-triangle {
+  width: 30px;
+  height: auto;
   flex: none;
-  background: none;
-  border-radius: 0;
-  display: block;
+  color: var(--ink);
+  transition: color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
 }
 
-.brand-lockup:hover .brand-mark.brand-mark-img {
-  background: none;
+.brand-lockup:hover .brand-triangle {
+  color: var(--page-accent);
+  transform: rotate(-8deg);
 }
 
 .brand-lockup strong {
