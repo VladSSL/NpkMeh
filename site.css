@@ -603,41 +603,39 @@ h2 {
   background: var(--page-accent);
 }
 
-/* ------------- Светлый блок контактов на десктопе для всех страниц ------------ */
+/* -------------- Светлый блок контактов для всех страниц (все экраны) ---------- */
 
-@media (min-width: 701px) {
-  .document-shell .contacts-band {
-    background: var(--paper);
-    color: var(--ink);
-  }
+.document-shell .contacts-band {
+  background: var(--paper);
+  color: var(--ink);
+}
 
-  .document-shell .contacts-band h2 {
-    color: var(--ink);
-  }
+.document-shell .contacts-band h2 {
+  color: var(--ink);
+}
 
-  .document-shell .contacts-band p {
-    color: var(--muted);
-  }
+.document-shell .contacts-band p {
+  color: var(--muted);
+}
 
-  .document-shell .contact-phone {
-    color: var(--ink);
-    border-bottom-color: var(--border-strong);
-  }
+.document-shell .contact-phone {
+  color: var(--ink);
+  border-bottom-color: var(--border-strong);
+}
 
-  .document-shell .contact-phone:hover {
-    color: var(--page-accent);
-  }
+.document-shell .contact-phone:hover {
+  color: var(--page-accent);
+}
 
-  .document-shell .contacts-band .button.primary {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: #fff;
-  }
+.document-shell .contacts-band .button.primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
 
-  .document-shell .contacts-band .button.primary:hover {
-    border-color: var(--page-accent);
-    background: var(--page-accent);
-  }
+.document-shell .contacts-band .button.primary:hover {
+  border-color: var(--page-accent);
+  background: var(--page-accent);
 }
 
 .contacts-band .eyebrow {
