@@ -200,7 +200,7 @@ function initHeaderShadow() {
   window.addEventListener("scroll", update, { passive: true });
 }
 
-function initScrollReveal(selector) {
+function initScrollReveal(selector, staggerMs = 70) {
   if (prefersReducedMotion()) return;
 
   const els = document.querySelectorAll(selector);
@@ -209,9 +209,18 @@ function initScrollReveal(selector) {
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const el = entry.target;
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          io.unobserve(entry.target);
+          el.classList.add("is-visible", "revealed");
+          io.unobserve(el);
+
+          // после завершения анимации снять reveal-классы и delay,
+          // чтобы не перебивали hover/press-трансформации
+          const delay = parseFloat(el.style.transitionDelay) || 0;
+          window.setTimeout(() => {
+            el.classList.remove("reveal", "is-visible");
+            el.style.transitionDelay = "";
+          }, delay + 620);
         }
       });
     },
@@ -220,7 +229,7 @@ function initScrollReveal(selector) {
 
   els.forEach((el, i) => {
     el.classList.add("reveal");
-    el.style.transitionDelay = `${Math.min(i, 6) * 70}ms`;
+    el.style.transitionDelay = `${Math.min(i, 6) * staggerMs}ms`;
     io.observe(el);
   });
 }
@@ -301,7 +310,10 @@ function initCopyPhone() {
     link.addEventListener("click", () => {
       const phone = link.getAttribute("href").replace("tel:", "");
       copyText(phone)
-        .then(() => showToast("Номер скопирован"))
+        .then(() => {
+          showToast("Номер скопирован");
+          if (navigator.vibrate) navigator.vibrate(10);
+        })
         .catch(() => {});
     });
   });
@@ -497,7 +509,7 @@ function initLightbox(doc) {
 
 function initHomePage() {
   initHeaderShadow();
-  initScrollReveal(".catalog-card, .contacts-band, .home-copy");
+  initScrollReveal(".home-copy, .catalog-card, .contacts-band", 90);
   initBackToTop();
   initGlowLayer(".contacts-band");
   initCopyPhone();

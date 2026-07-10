@@ -44,6 +44,7 @@
 
   /* движение */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.4, 0.44, 1);
   --dur-fast: 160ms;
   --dur-base: 260ms;
   --dur-slow: 520ms;
@@ -954,12 +955,70 @@ h2 {
 .reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--spring, var(--ease));
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ------------------------- Тактильность (touch/press) ------------------------ */
+
+a,
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.catalog-card,
+.button,
+.header-action,
+.contact-phone,
+.document-page-frame {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (hover: none) {
+  .catalog-card:active {
+    transform: scale(0.98);
+    transition-duration: 90ms;
+  }
+
+  .button:active,
+  .header-action:active {
+    transform: scale(0.96);
+    transition-duration: 90ms;
+  }
+
+  .contact-phone:active {
+    color: var(--page-accent);
+  }
+
+  .document-page-frame:active {
+    transform: scale(0.99);
+    transition: transform 90ms var(--ease);
+  }
+}
+
+/* --------------------- Пульс телефона при доскролле (1 раз) ------------------- */
+
+@keyframes phone-pulse {
+  0% {
+    text-shadow: 0 0 0 rgba(183, 64, 44, 0);
+  }
+  35% {
+    color: var(--page-accent);
+    text-shadow: 0 0 24px rgba(183, 64, 44, 0.35);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(183, 64, 44, 0);
+  }
+}
+
+.contacts-band.revealed .contact-phone {
+  animation: phone-pulse 1400ms var(--ease) 350ms 1 both;
 }
 
 /* ---------------------------------- Responsive -------------------------------- */
@@ -1113,6 +1172,16 @@ h2 {
 
   .home-shell .contact-phone:hover {
     color: var(--page-accent);
+  }
+
+  /* Больше «воздуха» в каскаде появления на главной */
+  .home-shell .reveal {
+    transform: translateY(28px);
+  }
+
+  /* Отступ под системную полоску iPhone */
+  .home-shell .contacts-band {
+    padding-bottom: calc(clamp(34px, 5vw, 62px) + env(safe-area-inset-bottom, 0px));
   }
 }
 
