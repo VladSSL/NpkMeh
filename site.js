@@ -142,7 +142,6 @@ function renderDocument() {
     <section class="document-hero" aria-labelledby="document-title">
       <div class="document-hero-inner">
         <a class="back-link" href="./index.html">${ICONS.chevronLeft}На главную</a>
-        <p class="eyebrow">Каталог</p>
         <h1 id="document-title">${escapeHtml(doc.title)}</h1>
         <p>${escapeHtml(doc.description)}</p>
       </div>
