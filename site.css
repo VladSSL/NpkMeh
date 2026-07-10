@@ -577,6 +577,45 @@ h2 {
   z-index: 1;
 }
 
+/* --------------- Светлый блок контактов на главной (все экраны) -------------- */
+
+.home-shell .contacts-band {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.home-shell .contacts-band .glow-layer {
+  display: none;
+}
+
+.home-shell .contacts-band h2 {
+  color: var(--ink);
+}
+
+.home-shell .contacts-band p {
+  color: var(--muted);
+}
+
+.home-shell .contact-phone {
+  color: var(--ink);
+  border-bottom-color: var(--border-strong);
+}
+
+.home-shell .contact-phone:hover {
+  color: var(--page-accent);
+}
+
+.home-shell .contacts-band .button.primary {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.home-shell .contacts-band .button.primary:hover {
+  border-color: var(--page-accent);
+  background: var(--page-accent);
+}
+
 .contacts-band .eyebrow {
   color: var(--page-accent);
 }
@@ -1162,13 +1201,7 @@ button {
 
   .home-shell .contacts-band {
     margin-top: auto;
-    background: var(--paper);
-    color: var(--ink);
     gap: 10px;
-  }
-
-  .home-shell .contacts-band .glow-layer {
-    display: none;
   }
 
   .home-shell .contacts-band .eyebrow {
@@ -1180,13 +1213,11 @@ button {
   }
 
   .home-shell .contacts-band h2 {
-    color: var(--ink);
     font-size: 22px;
     margin-bottom: 8px;
   }
 
   .home-shell .contacts-band p {
-    color: var(--muted);
     font-size: 13px;
     max-width: none;
     margin-bottom: 0;
@@ -1194,15 +1225,6 @@ button {
 
   .home-shell .contacts-band .button.primary {
     display: none;
-  }
-
-  .home-shell .contact-phone {
-    color: var(--ink);
-    border-bottom-color: var(--border-strong);
-  }
-
-  .home-shell .contact-phone:hover {
-    color: var(--page-accent);
   }
 
   /* Больше «воздуха» в каскаде появления на главной */
