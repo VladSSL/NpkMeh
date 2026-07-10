@@ -274,6 +274,46 @@ svg {
   transform: translateY(-1px);
 }
 
+.header-action-phone:hover svg {
+  color: var(--page-accent);
+  animation: icon-ring 500ms ease;
+}
+
+.header-action-download:hover svg {
+  color: var(--page-accent);
+  animation: icon-nod 450ms ease;
+}
+
+@keyframes icon-ring {
+  15% {
+    transform: rotate(-14deg);
+  }
+  30% {
+    transform: rotate(11deg);
+  }
+  45% {
+    transform: rotate(-8deg);
+  }
+  60% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+
+@keyframes icon-nod {
+  30% {
+    transform: translateY(3px);
+  }
+  55% {
+    transform: translateY(-1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .header-action-primary {
   position: relative;
   overflow: hidden;

@@ -75,9 +75,9 @@ function actionBarHtml(doc, extraClass = "", label = "Контакты и PDF") 
 
   return `
     <div class="${className}" aria-label="${label}">
-      <a class="header-action" href="${CONTACT.href}">${ICONS.phone}<span>${CONTACT.label}</span></a>
+      <a class="header-action header-action-phone" href="${CONTACT.href}">${ICONS.phone}<span>${CONTACT.label}</span></a>
       <a class="header-action header-action-primary" href="${CONTACT.href}">Оставить заявку</a>
-      <a class="header-action" href="${doc.pdfHref}" download="${doc.downloadFileName}">${ICONS.download}<span>Скачать PDF</span></a>
+      <a class="header-action header-action-download" href="${doc.pdfHref}" download="${doc.downloadFileName}">${ICONS.download}<span>Скачать PDF</span></a>
     </div>
   `;
 }
