@@ -518,16 +518,15 @@ function initLightbox(doc) {
 function initHomePage() {
   initHeaderShadow();
 
-  const isMobile = window.matchMedia("(max-width: 700px)").matches;
-  // Длительность полного цикла карточки: fade-in (var(--dur-slow) = 520мс)
-  // + двойное свечение (2 x 820мс). На мобильном вторая карточка ждёт,
-  // пока полностью отыграет первая — строго по очереди.
-  const CARD_SEQUENCE_MS = 520 + 2 * 820;
-  const cardStagger = isMobile ? CARD_SEQUENCE_MS : 90;
-
   initScrollReveal(".home-copy", 0);
-  initScrollReveal(".catalog-card", cardStagger);
+  initScrollReveal(".catalog-card", 90);
   initScrollReveal(".contacts-band", 0);
+
+  // Свечение карточек — строго по очереди: карточка 2 начинает
+  // пульсировать только после того, как полностью отыграет карточка 1.
+  document.querySelectorAll(".catalog-card").forEach((el, i) => {
+    el.style.setProperty("--glow-order", i);
+  });
 
   initBackToTop();
   initGlowLayer(".contacts-band");
