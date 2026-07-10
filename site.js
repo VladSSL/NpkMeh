@@ -126,10 +126,7 @@ function renderDocument() {
       <a class="brand-lockup" href="./index.html" aria-label="На главную">
         <span class="brand-mark">M</span>
         <span>
-          <span class="brand-swap" aria-hidden="true">
-            <strong class="brand-swap-a">МЕХАНИК.РФ</strong>
-            <strong class="brand-swap-b">МРНК.РФ</strong>
-          </span>
+          <strong>МРНК.РФ</strong>
           <small>${escapeHtml(doc.title)}</small>
         </span>
       </a>
