@@ -1056,6 +1056,57 @@ h2 {
   .back-to-top {
     display: none;
   }
+
+  /* --------- Мобильная главная: убрать nav, "не оферта", тёмный блок --------- */
+
+  .home-shell .main-nav {
+    display: none;
+  }
+
+  .home-shell .home-copy .eyebrow {
+    display: none;
+  }
+
+  .home-shell .contacts-band {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .home-shell .contacts-band .glow-layer {
+    display: none;
+  }
+
+  .home-shell .contacts-band .eyebrow {
+    display: none;
+  }
+
+  .home-shell .contacts-band h2 {
+    color: var(--ink);
+  }
+
+  .home-shell .contacts-band p {
+    color: var(--muted);
+  }
+
+  .home-shell .contact-phone {
+    color: var(--ink);
+    border-bottom-color: var(--border-strong);
+  }
+
+  .home-shell .contact-phone:hover {
+    color: var(--page-accent);
+  }
+
+  .home-shell .contacts-band .button.primary {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .home-shell .contacts-band .button.primary:hover {
+    border-color: var(--page-accent);
+    background: var(--page-accent);
+  }
 }
 
 /* --------------------------- Переходы между страницами -------------------------- */
