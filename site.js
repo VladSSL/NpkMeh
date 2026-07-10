@@ -210,18 +210,24 @@ function initScrollReveal(selector, staggerMs = 70) {
     (entries) => {
       entries.forEach((entry) => {
         const el = entry.target;
-        if (entry.isIntersecting) {
-          el.classList.add("is-visible", "revealed");
-          io.unobserve(el);
+        if (!entry.isIntersecting) return;
+        io.unobserve(el);
 
-          // после завершения анимации снять reveal-классы и delay,
-          // чтобы не перебивали hover/press-трансформации
-          const delay = parseFloat(el.style.transitionDelay) || 0;
+        const delay = Number(el.dataset.revealDelay || 0);
+
+        // Задержку до появления отсчитывает сам JS (setTimeout), а не CSS
+        // transition-delay — так надёжнее: если блок уже виден при загрузке
+        // страницы, IntersectionObserver может сработать раньше первой
+        // отрисовки, и transition-delay в этот момент иногда "схлопывается".
+        window.setTimeout(() => {
+          el.classList.add("is-visible", "revealed");
+
+          // после появления снять reveal-классы, чтобы не перебивали
+          // hover/press-трансформации
           window.setTimeout(() => {
             el.classList.remove("reveal", "is-visible");
-            el.style.transitionDelay = "";
-          }, delay + 620);
-        }
+          }, 620);
+        }, delay);
       });
     },
     { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
@@ -230,7 +236,7 @@ function initScrollReveal(selector, staggerMs = 70) {
   els.forEach((el, i) => {
     el.classList.add("reveal");
     const delay = Math.min(i, 6) * staggerMs;
-    el.style.transitionDelay = `${delay}ms`;
+    el.dataset.revealDelay = delay;
     el.style.setProperty("--reveal-delay", `${delay}ms`);
     io.observe(el);
   });
@@ -511,7 +517,18 @@ function initLightbox(doc) {
 
 function initHomePage() {
   initHeaderShadow();
-  initScrollReveal(".home-copy, .catalog-card, .contacts-band", 90);
+
+  const isMobile = window.matchMedia("(max-width: 700px)").matches;
+  // Длительность полного цикла карточки: fade-in (var(--dur-slow) = 520мс)
+  // + двойное свечение (2 x 820мс). На мобильном вторая карточка ждёт,
+  // пока полностью отыграет первая — строго по очереди.
+  const CARD_SEQUENCE_MS = 520 + 2 * 820;
+  const cardStagger = isMobile ? CARD_SEQUENCE_MS : 90;
+
+  initScrollReveal(".home-copy", 0);
+  initScrollReveal(".catalog-card", cardStagger);
+  initScrollReveal(".contacts-band", 0);
+
   initBackToTop();
   initGlowLayer(".contacts-band");
   initCopyPhone();

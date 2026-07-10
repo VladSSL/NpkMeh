@@ -1042,7 +1042,7 @@ button {
 
 .catalog-card.revealed {
   animation: card-glow-pulse 820ms ease-in-out 2;
-  animation-delay: calc(var(--reveal-delay, 0ms) + 520ms);
+  animation-delay: var(--dur-slow);
 }
 
 /* ---------------------------------- Responsive -------------------------------- */
