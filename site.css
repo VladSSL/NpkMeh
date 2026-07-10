@@ -24,11 +24,14 @@
   /* акценты (переопределяются классами .accent-red / .accent-steel) */
   --accent: #b7402c;
   --accent-soft: #f7ebe6;
+  --accent-glow: rgba(183, 64, 44, 0.32);
   --accent-2: #1b6570;
   --accent-2-soft: #e7f1f1;
+  --accent-2-glow: rgba(27, 101, 112, 0.32);
 
   --page-accent: var(--accent);
   --page-accent-soft: var(--accent-soft);
+  --page-accent-glow: var(--accent-glow);
 
   /* тени */
   --shadow-xs: 0 1px 2px rgba(22, 24, 28, 0.05);
@@ -53,11 +56,13 @@
 .accent-red {
   --page-accent: var(--accent);
   --page-accent-soft: var(--accent-soft);
+  --page-accent-glow: var(--accent-glow);
 }
 
 .accent-steel {
   --page-accent: var(--accent-2);
   --page-accent-soft: var(--accent-2-soft);
+  --page-accent-glow: var(--accent-2-glow);
 }
 
 * {
@@ -1019,6 +1024,25 @@ button {
 
 .contacts-band.revealed .contact-phone {
   animation: phone-pulse 1400ms var(--ease) 350ms 1 both;
+}
+
+/* --------------------- Двойное свечение карточек каталога --------------------- */
+
+@keyframes card-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    border-color: var(--border);
+  }
+  50% {
+    box-shadow: 0 0 22px 2px var(--page-accent-glow);
+    border-color: var(--page-accent);
+  }
+}
+
+.catalog-card.revealed {
+  animation: card-glow-pulse 820ms ease-in-out 2;
+  animation-delay: calc(var(--reveal-delay, 0ms) + 520ms);
 }
 
 /* ---------------------------------- Responsive -------------------------------- */

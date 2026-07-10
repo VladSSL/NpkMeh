@@ -229,7 +229,9 @@ function initScrollReveal(selector, staggerMs = 70) {
 
   els.forEach((el, i) => {
     el.classList.add("reveal");
-    el.style.transitionDelay = `${Math.min(i, 6) * staggerMs}ms`;
+    const delay = Math.min(i, 6) * staggerMs;
+    el.style.transitionDelay = `${delay}ms`;
+    el.style.setProperty("--reveal-delay", `${delay}ms`);
     io.observe(el);
   });
 }
