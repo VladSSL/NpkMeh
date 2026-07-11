@@ -137,37 +137,12 @@ svg {
   min-width: 0;
 }
 
-.brand-mark {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  place-items: center;
-  border-radius: var(--r-pill);
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 16px;
-  font-weight: 700;
-  transition: background var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
-}
-
-.brand-lockup:hover .brand-mark {
-  background: var(--page-accent);
-  transform: rotate(-8deg);
-}
-
 .brand-triangle {
   width: 34px;
   height: auto;
   margin-right: -4px;
   flex: none;
   color: var(--ink);
-  transition: color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
-}
-
-.brand-lockup:hover .brand-triangle {
-  color: var(--page-accent);
-  transform: rotate(-8deg);
 }
 
 .brand-lockup strong {
