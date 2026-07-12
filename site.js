@@ -57,9 +57,13 @@ const escapeHtml = (value) =>
     return entities[char];
   });
 
-function pageImage(doc, index) {
+function pageBase(doc, index) {
   const page = String(index + 1).padStart(2, "0");
-  return `${doc.pagePath}/page-${page}.jpg`;
+  return `${doc.pagePath}/page-${page}`;
+}
+
+function pageImage(doc, index) {
+  return `${pageBase(doc, index)}.jpg`;
 }
 
 function navHtml(activeKey) {
@@ -94,7 +98,7 @@ function renderDocument() {
   if (!doc) return;
 
   const pages = Array.from({ length: doc.pageCount }, (_, index) => {
-    const src = pageImage(doc, index);
+    const base = pageBase(doc, index);
     const loading = index === 0 ? "eager" : "lazy";
     const lqip = window.LQIP?.[key]?.[index];
     const lqipStyle = lqip ? ` style="background-image:url('${lqip}')"` : "";
@@ -103,14 +107,23 @@ function renderDocument() {
       <figure class="document-page" data-page-index="${index}">
         <div class="document-page-frame" data-lightbox-trigger="${index}">
           <div class="page-lqip" aria-hidden="true"${lqipStyle}></div>
-          <img
-            src="${src}"
-            width="1587"
-            height="2244"
-            alt="${escapeHtml(doc.title)}. Страница ${index + 1}"
-            loading="${loading}"
-            decoding="async"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset="${base}-800.webp 800w, ${base}.webp 1587w"
+              sizes="(max-width: 900px) 100vw, 880px"
+            />
+            <img
+              src="${base}.jpg"
+              srcset="${base}-800.jpg 800w, ${base}.jpg 1587w"
+              sizes="(max-width: 900px) 100vw, 880px"
+              width="1587"
+              height="2244"
+              alt="${escapeHtml(doc.title)}. Страница ${index + 1}"
+              loading="${loading}"
+              decoding="async"
+            />
+          </picture>
           <span class="document-page-zoom" aria-hidden="true">${ICONS.zoom}</span>
         </div>
         <figcaption>${index + 1} / ${doc.pageCount}</figcaption>
@@ -168,9 +181,21 @@ function renderDocument() {
       </div>
     </section>
 
-    <div class="page-counter" role="status" aria-live="polite">
+    <button class="page-counter" type="button" aria-label="Открыть навигацию по страницам" aria-expanded="false">
+      ${ICONS.chevronUp}
       <span data-current>1</span> / ${doc.pageCount}
-    </div>
+    </button>
+
+    <nav class="filmstrip" id="filmstrip" aria-label="Навигация по страницам каталога">
+      <div class="filmstrip-track">
+        ${Array.from({ length: doc.pageCount }, (_, i) => `
+          <button class="filmstrip-thumb" type="button" data-goto-page="${i}" aria-label="Страница ${i + 1}">
+            <img src="${pageBase(doc, i)}-thumb.jpg" width="160" height="226" alt="" loading="lazy" decoding="async" />
+            <figcaption>${i + 1}</figcaption>
+          </button>
+        `).join("")}
+      </div>
+    </nav>
 
     <button class="back-to-top" type="button" aria-label="Наверх">${ICONS.chevronUp}</button>
 
@@ -340,6 +365,8 @@ function buildRequestModal() {
           <div class="request-success-icon">${ICONS.check}</div>
           <h2>Готово к отправке</h2>
           <p class="request-modal-sub">Сейчас откроется письмо в вашей почтовой программе — останется нажать «Отправить».</p>
+          <p class="request-modal-sub">Если почта не открылась — скопируйте заявку и отправьте на <strong>info@maspel.ru</strong> или позвоните <a href="${CONTACT.href}" style="white-space:nowrap">${CONTACT.label}</a>.</p>
+          <button class="button secondary" type="button" data-request-copy>Скопировать заявку</button>
           <button class="button secondary" type="button" data-request-close>Закрыть</button>
         </div>
       </div>
@@ -360,6 +387,7 @@ function initRequestModal() {
   const form = modal.querySelector(".request-form");
   const phoneInput = form.querySelector('[name="phone"]');
   let lastFocused = null;
+  let lastRequestText = "";
 
   const clearErrors = () => {
     modal.querySelectorAll(".field-error").forEach((el) => el.classList.remove("is-visible"));
@@ -402,7 +430,25 @@ function initRequestModal() {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal.classList.contains("is-open")) close();
+    if (!modal.classList.contains("is-open")) return;
+    if (event.key === "Escape") close();
+
+    if (event.key === "Tab") {
+      const focusables = Array.from(
+        modal.querySelectorAll('button, input, a[href], [tabindex]:not([tabindex="-1"])')
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   phoneInput.addEventListener("input", () => {
@@ -444,14 +490,15 @@ function initRequestModal() {
     }
     if (!valid) return;
 
-    const subject = encodeURIComponent("Заявка с сайта МЕХАНИК.РФ");
+    const subject = encodeURIComponent("Заявка с сайта МРНК.РФ");
     const bodyLines = [
       `Имя: ${name}`,
       `Телефон: ${form.phone.value}`,
       email ? `Email: ${email}` : null,
       `Страница: ${document.title}`,
     ].filter(Boolean);
-    const mailto = `mailto:info@maspel.ru?subject=${subject}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+    lastRequestText = bodyLines.join("\n");
+    const mailto = `mailto:info@maspel.ru?subject=${subject}&body=${encodeURIComponent(lastRequestText)}`;
 
     formWrap.style.display = "none";
     successPanel.classList.add("is-visible");
@@ -460,6 +507,15 @@ function initRequestModal() {
       window.location.href = mailto;
     }, 250);
   });
+
+  const copyBtn = modal.querySelector("[data-request-copy]");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      copyText(`Заявка с сайта МРНК.РФ\n${lastRequestText}`)
+        .then(() => showToast("Заявка скопирована"))
+        .catch(() => {});
+    });
+  }
 }
 
 function initCopyPhone() {
@@ -522,9 +578,18 @@ function initPageCounter(doc) {
   const counter = document.querySelector(".page-counter");
   const currentEl = counter?.querySelector("[data-current]");
   const pages = document.querySelectorAll(".document-page");
+  const filmstrip = document.querySelector("#filmstrip");
+  const thumbs = filmstrip ? filmstrip.querySelectorAll(".filmstrip-thumb") : [];
   if (!counter || !pages.length) return;
 
   let visiblePages = new Set();
+  let currentIndex = 0;
+
+  const setCurrent = (index) => {
+    currentIndex = index;
+    if (currentEl) currentEl.textContent = index + 1;
+    thumbs.forEach((thumb, i) => thumb.classList.toggle("is-current", i === index));
+  };
 
   const io = new IntersectionObserver(
     (entries) => {
@@ -538,8 +603,7 @@ function initPageCounter(doc) {
       });
 
       if (visiblePages.size) {
-        const current = Math.min(...visiblePages) + 1;
-        if (currentEl) currentEl.textContent = current;
+        setCurrent(Math.min(...visiblePages));
       }
 
       counter.classList.toggle("is-visible", window.scrollY > 240);
@@ -554,6 +618,55 @@ function initPageCounter(doc) {
     () => counter.classList.toggle("is-visible", window.scrollY > 240),
     { passive: true }
   );
+
+  if (!filmstrip) return;
+
+  const openStrip = () => {
+    filmstrip.classList.add("is-open");
+    counter.setAttribute("aria-expanded", "true");
+    const active = thumbs[currentIndex];
+    if (active) {
+      active.scrollIntoView({ inline: "center", block: "nearest", behavior: "instant" });
+    }
+  };
+
+  const closeStrip = () => {
+    filmstrip.classList.remove("is-open");
+    counter.setAttribute("aria-expanded", "false");
+  };
+
+  counter.addEventListener("click", () => {
+    if (filmstrip.classList.contains("is-open")) {
+      closeStrip();
+    } else {
+      openStrip();
+    }
+  });
+
+  thumbs.forEach((thumb) => {
+    thumb.addEventListener("click", () => {
+      const index = Number(thumb.dataset.gotoPage);
+      const target = document.querySelector(`.document-page[data-page-index="${index}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+      }
+      closeStrip();
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && filmstrip.classList.contains("is-open")) closeStrip();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (
+      filmstrip.classList.contains("is-open") &&
+      !filmstrip.contains(event.target) &&
+      !counter.contains(event.target)
+    ) {
+      closeStrip();
+    }
+  });
 }
 
 function initLightbox(doc) {

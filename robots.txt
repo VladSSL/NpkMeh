@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vladssl.github.io/NpkMeh/sitemap.xml

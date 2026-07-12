@@ -871,26 +871,111 @@ h2 {
   align-items: center;
   gap: 8px;
   padding: 9px 16px;
+  border: 0;
   border-radius: var(--r-pill);
   background: rgba(22, 24, 28, 0.86);
   backdrop-filter: blur(8px);
   color: #fff;
+  font: inherit;
   font-size: 13px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   box-shadow: var(--shadow-md);
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  transition: opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease), background var(--dur-fast) var(--ease);
   pointer-events: none;
+  cursor: pointer;
 }
 
 .page-counter.is-visible {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
+}
+
+.page-counter:hover {
+  background: rgba(22, 24, 28, 0.96);
 }
 
 .page-counter span {
+  color: var(--page-accent);
+}
+
+.page-counter svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ------------------------------ Filmstrip миниатюр ---------------------------- */
+
+.filmstrip {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: rgba(250, 249, 246, 0.96);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -12px 34px rgba(22, 24, 28, 0.1);
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: transform var(--dur-base) var(--ease), visibility var(--dur-base) var(--ease);
+}
+
+.filmstrip.is-open {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.filmstrip-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filmstrip-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 74px;
+  padding: 0;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.filmstrip-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.filmstrip-thumb figcaption {
+  padding: 3px 0 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}
+
+.filmstrip-thumb:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.filmstrip-thumb.is-current {
+  border-color: var(--page-accent);
+}
+
+.filmstrip-thumb.is-current figcaption {
   color: var(--page-accent);
 }
 
@@ -1417,9 +1502,12 @@ button {
     font-size: 22px;
   }
 
-  .page-counter,
   .back-to-top {
     display: none;
+  }
+
+  .filmstrip-thumb {
+    width: 62px;
   }
 
   /* --------- Мобильная главная: убрать nav, "не оферта", тёмный блок --------- */
@@ -1523,6 +1611,7 @@ button {
   .page-counter,
   .back-to-top,
   .viewer-progress,
+  .filmstrip,
   .lightbox {
     display: none;
   }
